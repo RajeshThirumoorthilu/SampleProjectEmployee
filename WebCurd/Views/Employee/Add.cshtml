@@ -1,0 +1,51 @@
+﻿@model WebCrud.Models.EmployeeWebModel
+
+
+<div class="container shadow p-5">
+    <div class="row pb-2">
+        <h2>Add Employee</h2>
+    </div>
+
+    <form >
+        <div asp-validation-summary="All"></div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Name">Employee Name</label> <span>*</span>
+                <input type="text" id="Name" class="form-control mb-3" asp-for="Name" placeholder="Enter Name">
+                
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Role">Role</label> <span>*</span>
+                <input type="text" id="Role" class="form-control mb-3" asp-for="Role" placeholder="Enter Role">
+                
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Salary">Salary</label>
+                <input type="text" class="form-control mb-3" asp-for="Salary" placeholder="Enter Salary">
+                
+            </div>
+            
+        </div>
+
+        <input type="button" id="btnsave" title="Save" class="btn btn-lg btn-primary p-2" name="Save" value="Save"/>
+        @*<button type="submit" class="btn btn-lg btn-primary p-2"><i class="bi bi-file-plus-fill"></i>Save</button>*@
+        <a asp-controller="Employee" asp-action="Index" class="btn btn-lg btn-warning p-2">Back</a>
+    </form>
+
+</div>
+
+<script>
+    $("#btnsave").click(function(){
+        debugger;
+        if ($("#Name").val() == "") {
+            alert("Enter Name !!!");
+        }
+        if ($("#Role").val() == "") {
+            alert("Enter Role !!!");
+        }
+    })
+</script>
