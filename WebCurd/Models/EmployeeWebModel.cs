@@ -6,5 +6,6 @@
         public string Name { get; set; } = null!;
         public string? Role { get; set; }
         public decimal Salary { get; set; }
+        public string Mode { get; set; }
     }
 }

@@ -3,36 +3,60 @@
 
 <div class="container shadow p-5">
     <div class="row pb-2">
-        <h2>Add Employee</h2>
+        @if (Model.Mode =="Add"){
+            <h2>Add Employee</h2>
+        }
+        else{
+            <h2>Edit Employee</h2>
+        }
+        
     </div>
 
-    <form >
+    <form id="employeeformid">
         <div asp-validation-summary="All"></div>
-
+        <input type="hidden" id="Mode" value="@Model.Mode"/>
+        <input type="hidden" id="Id" value="@Model.Id" />
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label asp-for="Name">Employee Name</label> <span>*</span>
-                <input type="text" id="Name" class="form-control mb-3" asp-for="Name" placeholder="Enter Name">
-                
+                @if (Model.Mode == "Add")
+                {
+                    <input type="text" id="Name" class="form-control mb-3" asp-for="Name" placeholder="Enter Name">
+                }
+                else{
+                    <input type="text" id="Name" class="form-control mb-3" asp-for="Name" placeholder="Enter Name" value="@Model.Name">
+                }
             </div>
             <div class="form-group col-md-6">
                 <label asp-for="Role">Role</label> <span>*</span>
-                <input type="text" id="Role" class="form-control mb-3" asp-for="Role" placeholder="Enter Role">
-                
+                @if (Model.Mode == "Add")
+                {
+                    <input type="text" id="Role" class="form-control mb-3" asp-for="Role" placeholder="Enter Role">
+                }
+                else{
+                    <input type="text" id="Role" class="form-control mb-3" asp-for="Role" placeholder="Enter Role" value="@Model.Role">
+                }
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label asp-for="Salary">Salary</label>
-                <input type="text" class="form-control mb-3" asp-for="Salary" placeholder="Enter Salary">
-                
+                @if (Model.Mode == "Add")
+                {
+                    <input type="text" id="Salary" class="form-control mb-3" asp-for="Salary" placeholder="Enter Salary">
+                }
+                else{
+                    <input type="text" id="Salary" class="form-control mb-3" asp-for="Salary" placeholder="Enter Salary" value="@Model.Salary">
+                }
             </div>
             
         </div>
-
-        <input type="button" id="btnsave" title="Save" class="btn btn-lg btn-primary p-2" name="Save" value="Save"/>
-        @*<button type="submit" class="btn btn-lg btn-primary p-2"><i class="bi bi-file-plus-fill"></i>Save</button>*@
+        @if(Model.Mode=="Edit"){
+            <input type="button" id="btnsave" title="Update" class="btn btn-lg btn-primary p-2" name="Update" value="Update" />
+        }else{
+            <input type="button" id="btnsave" title="Save" class="btn btn-lg btn-primary p-2" name="Save" value="Save" />
+        }
         <a asp-controller="Employee" asp-action="Index" class="btn btn-lg btn-warning p-2">Back</a>
     </form>
 
@@ -43,9 +67,26 @@
         debugger;
         if ($("#Name").val() == "") {
             alert("Enter Name !!!");
+            return false;
         }
         if ($("#Role").val() == "") {
             alert("Enter Role !!!");
+            return false;
         }
+        $.ajax({
+            url: "/Employee/PushEmployee",
+            data: $("#employeeformid").serialize() + "&Id=" + $("#Id").val() + "&Mode=" + $("#Mode").val(),
+            success: function (data, textStatus, jqXHR) {
+                debugger;
+                alert(data);
+                $("#Name").val("");
+                $("#Role").val("");
+                $("#Salary").val("");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                debugger;
+                alert(data);
+            }
+        })
     })
 </script>

@@ -35,9 +35,10 @@
                         @item.Salary
                     </td>
                     <td>
-                        <div role="group" class="w-60 btn-group">
+                        <div class="w-60 btn-group">
                             <a asp-controller="Employee" asp-action="Edit" asp-route-id="@item.Id" class=" btn btn-sm btn-primary"><i class="bi bi-pencil-square"></i>Edit</a>&nbsp;
-                            <a asp-controller="Employee" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i>Delete</a>
+                            
+                            <a class="btn btn-sm btn-danger" empid="@item.Id" id="btnDelete"><i class="bi bi-trash-fill"></i>Delete</a>
                         </div>
                     </td>
                 </tr>
@@ -45,3 +46,22 @@
         </tbody>
     </table>
 </div>
+<script>
+    $("#btnDelete").click(function(){
+        debugger;
+        var vl = $(this).attr("empid").val();
+        var jj = $(this).attr("empid");
+        $.ajax({
+            url:"/Employee/Delete",
+            data: { id: $(this).attr("empid").val() },
+            success: function (data, textStatus, jqXHR) {
+                debugger;
+                alert("Record Deleted Successfully");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                debugger;
+                alert("Record Deletion Failed");
+            }
+        })
+    })
+</script>

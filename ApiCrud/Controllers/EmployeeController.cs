@@ -46,5 +46,36 @@ namespace CRUD_Operations.Controllers
                 return Ok();
             return BadRequest();
         }
+        [HttpPut]
+        [Route("Update")]
+        public IActionResult Put(Employee employee)
+        {
+            if (employee == null || employee.Id == 0)
+                return BadRequest();
+
+            var emp = _context.Employees.Find(employee.Id);
+            if (emp == null)
+                return NotFound();
+            emp.Name = employee.Name;
+            emp.Role = employee.Role;
+            emp.Salary = employee.Salary;
+            var res= _context.SaveChanges();
+            if (res == 1)
+                return Ok();
+            return BadRequest();
+        }
+
+        [HttpDelete]
+        [Route("Delete")]
+        public IActionResult Delete(int id)
+        {
+            var emp = _context.Employees.Find(id);
+            if (emp == null) return NotFound();
+            _context.Employees.Remove(emp);
+            var res=_context.SaveChanges();
+            if (res == 1)
+                return Ok();
+            return BadRequest();
+        }
     }
 }
