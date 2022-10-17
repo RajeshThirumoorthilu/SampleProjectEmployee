@@ -82,10 +82,36 @@ namespace WebCrud.Controllers
             EmployeeWebModel employeeWebModel = new EmployeeWebModel();
             employeeWebModel.Id = Id;
             HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(_config.GetValue<string>("BaseApiUrl") + "GetById?id=" + Id);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var response = client.GetAsync(_config.GetValue<string>("BaseApiUrl") + "GetById?id=" + Id).Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                employeeWebModel = JsonConvert.DeserializeObject<EmployeeWebModel>(response.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                employeeWebModel = new EmployeeWebModel();
+            }
+            employeeWebModel.Mode = "Delete";
+            return View("Add", employeeWebModel);
+        }
+        public IActionResult DeleteEmp(int Id)
+        {
+            EmployeeWebModel employeeWebModel = new EmployeeWebModel();
+            employeeWebModel.Id = Id;
+            HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(_config.GetValue<string>("BaseApiUrl") + "Delete?id=" + Id);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var response = client.DeleteAsync(_config.GetValue<string>("BaseApiUrl") + "Delete?id=" + Id).Result;
-            return Json("");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return Json("Record Deleted Successfully");
+            }
+            else{
+                return Json("Record Deleted Failed");
+            }
+                
         }
     }
 }

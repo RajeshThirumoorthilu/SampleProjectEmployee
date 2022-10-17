@@ -1,13 +1,31 @@
 ﻿@model WebCrud.Models.EmployeeWebModel
 
+@{
+
+    if (Model.Mode == "Add")
+    {
+        ViewData["Title"] = "Add";
+    }
+    else if (Model.Mode == "Edit")
+    {
+        ViewData["Title"] = "Edit";
+    }
+    else
+    {
+        ViewData["Title"] = "Delete";
+    }   
+}
 
 <div class="container shadow p-5">
     <div class="row pb-2">
         @if (Model.Mode =="Add"){
             <h2>Add Employee</h2>
         }
-        else{
+        else if(Model.Mode=="Edit"){
             <h2>Edit Employee</h2>
+        }
+        else{
+            <h2>Delete Employee</h2>
         }
         
     </div>
@@ -23,8 +41,11 @@
                 {
                     <input type="text" id="Name" class="form-control mb-3" asp-for="Name" placeholder="Enter Name">
                 }
-                else{
+                else if (Model.Mode =="Edit"){
                     <input type="text" id="Name" class="form-control mb-3" asp-for="Name" placeholder="Enter Name" value="@Model.Name">
+                }
+                else if(Model.Mode=="Delete"){
+                    <input type="text" id="Name" class="form-control mb-3" asp-for="Name" placeholder="Enter Name" value="@Model.Name" disabled="disabled">
                 }
             </div>
             <div class="form-group col-md-6">
@@ -33,8 +54,13 @@
                 {
                     <input type="text" id="Role" class="form-control mb-3" asp-for="Role" placeholder="Enter Role">
                 }
-                else{
+                else if (Model.Mode == "Edit")
+                {
                     <input type="text" id="Role" class="form-control mb-3" asp-for="Role" placeholder="Enter Role" value="@Model.Role">
+                }
+                else if (Model.Mode == "Delete") 
+                {
+                    <input type="text" id="Role" class="form-control mb-3" asp-for="Role" placeholder="Enter Role" value="@Model.Role" disabled="disabled">
                 }
             </div>
         </div>
@@ -46,18 +72,29 @@
                 {
                     <input type="text" id="Salary" class="form-control mb-3" asp-for="Salary" placeholder="Enter Salary">
                 }
-                else{
+                else if (Model.Mode == "Edit"){
                     <input type="text" id="Salary" class="form-control mb-3" asp-for="Salary" placeholder="Enter Salary" value="@Model.Salary">
+                }
+                else if (Model.Mode == "Delete")
+                {
+                    <input type="text" id="Salary" class="form-control mb-3" asp-for="Salary" placeholder="Enter Salary" value="@Model.Salary" disabled="disabled">
                 }
             </div>
             
         </div>
-        @if(Model.Mode=="Edit"){
-            <input type="button" id="btnsave" title="Update" class="btn btn-lg btn-primary p-2" name="Update" value="Update" />
-        }else{
-            <input type="button" id="btnsave" title="Save" class="btn btn-lg btn-primary p-2" name="Save" value="Save" />
+        @if(Model.Mode=="Edit")
+        {
+            <input type="button" id="btnsave" title="Update" class="btn btn-lg btn-primary p-2 bi bi-file-plus-square" name="Update" value="Update" />
         }
-        <a asp-controller="Employee" asp-action="Index" class="btn btn-lg btn-warning p-2">Back</a>
+        else if (Model.Mode == "Delete")
+        {
+            <input type="button" id="btnDelete" title="Delete" class="btn btn-lg btn-primary p-2 bi bi-file-plus-square" name="Delete" value="Delete" />
+        }
+        else if (Model.Mode == "Add")
+        {
+            <input type="button" id="btnsave" title="Save" class="btn btn-lg btn-primary p-2 bi bi-file-plus-square" name="Save" value="Save" />
+        }
+        <a asp-controller="Employee" asp-action="Index" class="btn btn-lg btn-warning p-2 btnback"><i class="bi bi-pencil-square"></i>Back</a>
     </form>
 
 </div>
@@ -66,11 +103,11 @@
     $("#btnsave").click(function(){
         debugger;
         if ($("#Name").val() == "") {
-            alert("Enter Name !!!");
+            swal("", "Enter Name !!!", "error");
             return false;
         }
         if ($("#Role").val() == "") {
-            alert("Enter Role !!!");
+            swal("", "Enter Role !!!", "error");
             return false;
         }
         $.ajax({
@@ -78,14 +115,29 @@
             data: $("#employeeformid").serialize() + "&Id=" + $("#Id").val() + "&Mode=" + $("#Mode").val(),
             success: function (data, textStatus, jqXHR) {
                 debugger;
-                alert(data);
+                swal("", data, "success");
                 $("#Name").val("");
                 $("#Role").val("");
                 $("#Salary").val("");
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 debugger;
-                alert(data);
+                swal("", data, "error");
+            }
+        })
+    })
+    $("#btnDelete").click(function () {
+        debugger;
+        $.ajax({
+            url: "/Employee/DeleteEmp",
+            data: {Id : $("#Id").val()} ,
+            success: function (data, textStatus, jqXHR) {
+                debugger;
+                swal("", data, "success");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                debugger;
+                swal("", data, "error");
             }
         })
     })
